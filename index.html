@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O Algoritmo da Vida v1.1</title>
+    <style>
+        :root {
+            --primary: #00ff41; /* Verde Matrix */
+            --bg: #0d0d0d;
+            --panel: #1a1a1a;
+            --text: #e0e0e0;
+            --alert: #ff3333;
+        }
+
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: var(--panel);
+            padding: 2rem;
+            border-radius: 10px;
+            border: 1px solid var(--primary);
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1, h2 {
+            color: var(--primary);
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        p {
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            background: #000;
+            border: 1px solid #333;
+            color: var(--primary);
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+        
+        /* Foco nos inputs para melhor usabilidade */
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary);
+            color: #000;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #fff;
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        .card {
+            background: #000;
+            padding: 15px;
+            border-left: 3px solid var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            height: 5px;
+            background: #333;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.5s;
+        }
+
+        /* Animação de digitação */
+        .typing-effect {
+            border-right: 2px solid var(--primary);
+            white-space: nowrap;
+            overflow: hidden;
+            animation: blink 0.7s step-end infinite;
+        }
+
+        @keyframes blink {
+            50% { border-color: transparent; }
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 1rem; }
+            h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+    <div id="step-1">
+        <h1>> System_Start</h1>
+        <p>Bem-vindo ao <strong>Algoritmo da Vida</strong>.</p>
+        <p>Vamos aplicar a <em>Teoria da Computação</em> para organizar seu futuro. Assim como um computador precisa de bons dados e lógica, sua mente também precisa.</p>
+        <p>Status do Sistema: <span style="color:var(--alert)">Não Otimizado</span></p>
+        <button onclick="nextStep(2)">Iniciar Processamento</button>
+    </div>
+
+    <div id="step-2" class="hidden">
+        <h2>1. Firewall de Atenção</h2>
+        <p class="card"><strong>Conceito (Teoria da Complexidade):</strong> Alguns problemas consomem muitos recursos. Nas redes sociais, a comparação e o excesso de informação travam seu "processador".</p>
+        <p>Identifique um "Input Tóxico" que drena sua energia hoje (ex: perfil de fofoca, notícias ruins):</p>
+        <input type="text" id="input-toxic" placeholder="Digite aqui o que você vai bloquear...">
+        <p>Substitua por um "Input Leve" (algo que te ensina ou diverte):</p>
+        <input type="text" id="input-good" placeholder="Digite algo positivo...">
+        <button onclick="activateFirewall()">Ativar Firewall</button>
+    </div>
+
+    <div id="step-3" class="hidden">
+        <h2>2. Autômato de Emoções</h2>
+        <p class="card"><strong>Conceito (Teoria dos Autômatos):</strong> Você é uma máquina de estados. Um input (gatilho) pode mudar seu estado emocional se você programar a transição correta.</p>
+        
+        <label>Quando eu me sentir (Estado Atual):</label>
+        <select id="state-trigger">
+            <option value="Ansioso com o Futuro">Ansioso com o Futuro</option>
+            <option value="Comparando com os outros">Comparando com os outros</option>
+            <option value="Desmotivado">Desmotivado</option>
+            <option value="Procrastinando">Procrastinando</option>
+        </select>
+
+        <label>Eu vou executar a ação (Função de Transição):</label>
+        <input type="text" id="state-action" placeholder="Ex: Respirar fundo, Estudar 10min, Sair do Instagram...">
+
+        <label>Para mudar meu estado para (Estado Final):</label>
+        <input type="text" id="state-result" placeholder="Ex: Focado, Tranquilo, Confiante...">
+        
+        <button onclick="nextStep(4)">Configurar Transição</button>
+    </div>
+
+    <div id="step-4" class="hidden">
+        <h2>3. Compilando 2026</h2>
+        <p class="card"><strong>Conceito (Computabilidade):</strong> Problemas "intratáveis" não têm solução rápida. Mas se quebrarmos em passos lógicos, tornam-se "computáveis".</p>
+        <p>Vamos escrever o pseudocódigo da sua meta principal para 2026.</p>
+
+        <label>Meta Principal (Variável Final):</label>
+        <input type="text" id="goal-2026" placeholder="Ex: Conseguir Emprego em TI">
+
+        <label>Recurso Necessário (Input):</label>
+        <input type="text" id="resource-2026" placeholder="Ex: Curso de Inglês / Economizar R$">
+
+        <button onclick="compileCode()">Compilar Código</button>
+    </div>
+
+    <div id="step-5" class="hidden">
+        <h2>> Compilação: Sucesso</h2>
+        <p>Seu algoritmo pessoal foi atualizado.</p>
+        
+        <div class="card" style="font-family: monospace; font-size: 0.9rem; overflow-x: auto;">
+            <p><span style="color: #ff79c6">function</span> <span style="color: #50fa7b">MeuFuturo2026</span>() {</p>
+            <p>&nbsp;&nbsp;<span style="color: #6272a4">// Firewall Ativado</span></p>
+            <p>&nbsp;&nbsp;<span style="color: #8be9fd">block</span>("<span id="out-toxic"></span>");</p>
+            <p>&nbsp;&nbsp;<span style="color: #6272a4">// Autômato de Defesa</span></p>
+            <p>&nbsp;&nbsp;<span style="color: #ff79c6">if</span> (sentimento == "<span id="out-trigger"></span>") {</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #f1fa8c">executar</span>("<span id="out-action"></span>");</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #ff79c6">return</span> "<span id="out-state-result"></span>";</p>
+            <p>&nbsp;&nbsp;}</p>
+            <p>&nbsp;&nbsp;<span style="color: #6272a4">// Meta Computável</span></p>
+            <p>&nbsp;&nbsp;<span style="color: #ff79c6">while</span> (ano < 2026) {</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #50fa7b">focar</span>("<span id="out-resource"></span>");</p>
+            <p>&nbsp;&nbsp;}</p>
+            <p>&nbsp;&nbsp;<span style="color: #ff79c6">return</span> "<span id="out-goal"></span>";</p>
+            <p>}</p>
+        </div>
+
+        <p style="text-align: center; font-size: 0.8rem;">Tire um print deste código e guarde como seu compromisso.</p>
+        <button onclick="location.reload()">Reiniciar Sistema</button>
+    </div>
+
+</div>
+
+<script>
+    function nextStep(step) {
+        // Esconde todas as divs
+        for(let i=1; i<=5; i++){
+            document.getElementById('step-'+i).classList.add('hidden');
+        }
+        // Mostra a div atual
+        document.getElementById('step-'+step).classList.remove('hidden');
+        
+        // Atualiza barra de progresso
+        let percent = (step-1) * 25;
+        document.getElementById('progress').style.width = percent + '%';
+    }
+
+    function activateFirewall() {
+        const toxic = document.getElementById('input-toxic').value;
+        if(!toxic) { alert("Por favor, identifique um input tóxico."); return; }
+        
+        // Salva dados
+        localStorage.setItem('toxic', toxic);
+        nextStep(3);
+    }
+
+    function compileCode() {
+        const goal = document.getElementById('goal-2026').value;
+        const resource = document.getElementById('resource-2026').value;
+        const action = document.getElementById('state-action').value;
+        const stateResult = document.getElementById('state-result').value;
+
+        if(!goal || !resource || !action || !stateResult) { alert("Preencha todos os campos para compilar."); return; }
+
+        // Popula o resultado final
+        document.getElementById('out-toxic').innerText = localStorage.getItem('toxic');
+        document.getElementById('out-trigger').innerText = document.getElementById('state-trigger').value;
+        document.getElementById('out-action').innerText = action;
+        document.getElementById('out-state-result').innerText = stateResult;
+        document.getElementById('out-resource').innerText = resource;
+        document.getElementById('out-goal').innerText = goal;
+
+        // Simula tempo de processamento
+        document.getElementById('step-4').innerHTML = "<h2>Processando...</h2><p class='typing-effect'>Compilando dados do usuário...</p>";
+        
+        setTimeout(() => {
+            nextStep(5);
+        }, 2000);
+    }
+</script>
+
+</body>
+</html>
